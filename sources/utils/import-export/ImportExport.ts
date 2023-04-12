@@ -355,10 +355,11 @@ async function resolveModuleSpecifier (dirname: string, moduleSpecifier: string)
 	// Check if the specifier directly points do a file
 	try
 	{
-		const stat = await Deno.stat( path.resolve(dirname, moduleSpecifier) )
+		const absolute = path.resolve(dirname, moduleSpecifier)
+		const stat = await Deno.stat(absolute)
 		if (stat.isFile)
 		{
-			return moduleSpecifier
+			return absolute
 		}
 	}
 	catch (_error)
