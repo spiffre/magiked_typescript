@@ -208,7 +208,8 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 			{
 				const variableSt = statement as TS.VariableStatement
 				const variableDeclList = variableSt.declarationList
-				const kind = (variableDeclList.flags & ts.NodeFlags.Const)
+				
+				const flavor = (variableDeclList.flags & ts.NodeFlags.Const)
 									? 'const' as const
 									: (variableDeclList.flags & ts.NodeFlags.Let)
 									? 'let' as const
@@ -219,9 +220,7 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 					assert(ts.isIdentifier(decl.name)) // fixme: if it's not, we have an object or array pattern
 					
 					return {
-						name : decl.name.escapedText.toString(),
-						alias : undefined,  // fixme: does it even exist in this context ?
-						kind
+						name : decl.name.escapedText.toString()
 					}
 				})
 				
@@ -229,72 +228,75 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 				{
 					type : 'ExportDeclarationAst',
 					kind : 'variable',
+					flavor,
+					declarations,
 					isDefault,
-					loc,
-					declarations
+					loc
 				}
 			}
 			// If it's a function
 			else if (statement.kind == ts.SyntaxKind.FunctionDeclaration && (statement as TS.FunctionDeclaration).asteriskToken == undefined)
 			{
 				const funcDecl = statement as ts.FunctionDeclaration
+				const funcName = funcDecl.name ? funcDecl.name.escapedText.toString() : ""
+				
+				// A function can only be anonymous if it's a default export
+				if (isDefault == false)
+				{
+					assert(funcName.length > 0)
+				}
 
 				exportAst =
 				{
 					type : 'ExportDeclarationAst',
 					kind : 'function',
+					flavor : 'function',
+					name : funcName,
 					isDefault,
-					loc,
-					declarations :
-					[
-						{
-							name : funcDecl.name?.escapedText.toString(),
-							alias : undefined,
-							kind : undefined
-						}
-					]
+					loc
 				}
 			}
 			// If it's a function generator
 			else if (statement.kind == ts.SyntaxKind.FunctionDeclaration && (statement as TS.FunctionDeclaration).asteriskToken?.kind == ts.SyntaxKind.AsteriskToken)
 			{
 				const funcDecl = statement as ts.FunctionDeclaration
-
+				const funcName = funcDecl.name ? funcDecl.name.escapedText.toString() : ""
+				
+				// A function can only be anonymous if it's a default export
+				if (isDefault == false)
+				{
+					assert(funcName.length > 0)
+				}
+				
 				exportAst =
 				{
 					type : 'ExportDeclarationAst',
-					kind : 'function*',
+					kind : 'function',
+					flavor : 'generator',
+					name : funcName,
 					isDefault,
-					loc,
-					declarations :
-					[
-						{
-							name : funcDecl.name?.escapedText.toString(),
-							alias : undefined,
-							kind : undefined
-						}
-					]
+					loc
 				}
 			}
 			// If it's a class
 			else if (statement.kind == ts.SyntaxKind.ClassDeclaration)
 			{
 				const classDecl = statement as ts.ClassDeclaration
+				const className = classDecl.name ? classDecl.name.escapedText.toString() : ""
+				
+				// A class can only be anonymous if it's a default export
+				if (isDefault == false)
+				{
+					assert(className.length > 0)
+				}
 
 				exportAst =
 				{
 					type : 'ExportDeclarationAst',
 					kind : 'class',
+					name : className,
 					isDefault,
-					loc,
-					declarations :
-					[
-						{
-							name : classDecl.name?.escapedText.toString(),
-							alias : undefined,
-							kind : undefined
-						}
-					]
+					loc
 				}
 			}
 			

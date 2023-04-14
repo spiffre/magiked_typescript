@@ -15,6 +15,8 @@ export interface MetaAst
 	}
 }
 
+// IMPORT
+
 export interface ImportMetaAst extends MetaAst
 {
 	type: 'ImportMetaAst'
@@ -30,22 +32,40 @@ export interface ImportMetaAst extends MetaAst
 	moduleSpecifier: ModuleSpecifier
 }
 
-export interface ExportDeclarationAst extends MetaAst
+// EXPORT DECLARATION / DEFAULT EXPORT DECLARATION
+
+interface VariableDeclarationAst extends MetaAst
 {
 	type: 'ExportDeclarationAst'
-	kind: 'variable' | 'function' | 'function*' | 'class',
+	kind: 'variable'
+	flavor: 'const' | 'let' | 'var'
 	isDefault: boolean
-	declarations:
-	{
-		name?: string
-		alias?: string
-		kind?: 'const' | 'let' | 'var',
-		
-		//initializer?: any
-		//isObjectPattern? boolean (in which case, there's no "name")
-		//isArrayPattern? boolean (in which case, there's no "name")
-	}[]
+	
+	declarations: { name: string }[]
 }
+
+interface FunctionDeclarationAst extends MetaAst
+{
+	type: 'ExportDeclarationAst'
+	kind: 'function'
+	flavor: 'function' | 'generator'
+	isDefault: boolean
+	
+	name: string
+}
+
+interface ClassDeclarationAst extends MetaAst
+{
+	type: 'ExportDeclarationAst'
+	kind: 'class'
+	isDefault: boolean
+	
+	name?: string
+}
+
+export type ExportDeclarationAst = VariableDeclarationAst | FunctionDeclarationAst | ClassDeclarationAst
+
+// EXPORT LIST
 
 export interface ExportListAst extends MetaAst
 {
@@ -56,6 +76,8 @@ export interface ExportListAst extends MetaAst
 		alias?: string
 	}[]
 }
+
+// RE-EXPORT
 
 export interface ReexportMetaAst extends MetaAst
 {
@@ -70,6 +92,8 @@ export interface ReexportMetaAst extends MetaAst
 	namespaceAlias?: string
 	moduleSpecifier: ModuleSpecifier
 }
+
+// MISC
 
 export interface ImportExportGraphNode
 {

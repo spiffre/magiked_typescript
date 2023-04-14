@@ -240,73 +240,57 @@ Deno.test('Export multiple variable declaration with assignment', async () =>  /
 
 	assert(exportAst.type == "ExportDeclarationAst")
 	
-	assertEquals(exportAst.kind, "variable")
-	assertEquals(exportAst.isDefault, false)
+	assert(exportAst.kind == "variable")
+	assert(exportAst.flavor == "const")
+	
 	assertEquals(exportAst.declarations,
 	[
-		{ name: "name1", alias: undefined, kind : 'const' },
-		{ name: "name2", alias: undefined, kind : 'const' },
+		{ name: "name1" },
+		{ name: "name2" },
 	])
+	
+	assertEquals(exportAst.isDefault, false)
 })
 
 Deno.test('Export function declaration', async () =>
 {
-	const sourceCode = 'export function functionName() { /* … */ }'
+	const sourceCode = 'export function functionName() {}'
 	const result = await parseImportExportStatementsFromString(sourceCode, 'whatever')
 	const exportAst = result.exports[0]
 
 	assert(exportAst.type == "ExportDeclarationAst")
+	assert(exportAst.kind == "function")
+	assert(exportAst.flavor == "function")
 	
-	assertEquals(exportAst.kind, "function")
+	assertEquals(exportAst.name, "functionName")
 	assertEquals(exportAst.isDefault, false)
-	assertEquals(exportAst.declarations,
-	[
-		{
-			name: "functionName",
-			alias: undefined,
-			kind : undefined
-		}
-	])
 })
 
 Deno.test('Export generator function declaration', async () =>
 {
-	const sourceCode = 'export function* generatorFunctionName() { /* … */ }'
+	const sourceCode = 'export function* generatorFunctionName() {}'
 	const result = await parseImportExportStatementsFromString(sourceCode, 'whatever')
 	const exportAst = result.exports[0]
-
-	assert(exportAst.type == "ExportDeclarationAst")
 	
-	assertEquals(exportAst.kind, "function*")
+	assert(exportAst.type == "ExportDeclarationAst")
+	assert(exportAst.kind == "function")
+	assert(exportAst.flavor == "generator")
+
+	assertEquals(exportAst.name, "generatorFunctionName")
 	assertEquals(exportAst.isDefault, false)
-	assertEquals(exportAst.declarations,
-	[
-		{
-			name: "generatorFunctionName",
-			alias: undefined,
-			kind : undefined
-		}
-	])
 })
 
 Deno.test('Export class declaration', async () =>
 {
-	const sourceCode = 'export class ClassName { /* … */ }'
+	const sourceCode = 'export class ClassName {}'
 	const result = await parseImportExportStatementsFromString(sourceCode, 'whatever')
 	const exportAst = result.exports[0]
 
 	assert(exportAst.type == "ExportDeclarationAst")
+	assert(exportAst.kind == "class")
 	
-	assertEquals(exportAst.kind, "class")
+	assertEquals(exportAst.name, "ClassName")
 	assertEquals(exportAst.isDefault, false)
-	assertEquals(exportAst.declarations,
-	[
-		{
-			name: "ClassName",
-			alias: undefined,
-			kind: undefined
-		}
-	])
 })
 
 
@@ -325,62 +309,43 @@ Deno.test('Export class declaration', async () =>
 
 Deno.test('Export function declaration as default', async () =>
 {
-	const sourceCode = 'export default function functionName() { /* … */ }'
+	const sourceCode = 'export default function functionName() {}'
 	const result = await parseImportExportStatementsFromString(sourceCode, 'whatever')
 	const exportAst = result.exports[0]
 
 	assert(exportAst.type == "ExportDeclarationAst")
+	assert(exportAst.kind == "function")
+	assert(exportAst.flavor == "function")
 	
-	assertEquals(exportAst.kind, "function")
+	assertEquals(exportAst.name, "functionName")
 	assertEquals(exportAst.isDefault, true)
-	assertEquals(exportAst.declarations,
-	[
-		{
-			name: "functionName",
-			alias: undefined,
-			kind : undefined
-		}
-	])
 })
 
 Deno.test('Export generator function declaration as default', async () =>
 {
-	const sourceCode = 'export default function* generatorFunctionName() { /* … */ }'
+	const sourceCode = 'export default function* generatorFunctionName() {}'
 	const result = await parseImportExportStatementsFromString(sourceCode, 'whatever')
 	const exportAst = result.exports[0]
-
-	assert(exportAst.type == "ExportDeclarationAst")
 	
-	assertEquals(exportAst.kind, "function*")
+	assert(exportAst.type == "ExportDeclarationAst")
+	assert(exportAst.kind == "function")
+	assert(exportAst.flavor == "generator")
+
+	assertEquals(exportAst.name, "generatorFunctionName")
 	assertEquals(exportAst.isDefault, true)
-	assertEquals(exportAst.declarations,
-	[
-		{
-			name: "generatorFunctionName",
-			alias: undefined,
-			kind : undefined
-		}
-	])
 })
 
 Deno.test('Export class declaration as default', async () =>
 {
-	const sourceCode = 'export default class ClassName { /* … */ }'
+	const sourceCode = 'export default class ClassName {}'
 	const result = await parseImportExportStatementsFromString(sourceCode, 'whatever')
 	const exportAst = result.exports[0]
-	
+
 	assert(exportAst.type == "ExportDeclarationAst")
+	assert(exportAst.kind == "class")
 	
-	assertEquals(exportAst.kind, "class")
+	assertEquals(exportAst.name, "ClassName")
 	assertEquals(exportAst.isDefault, true)
-	assertEquals(exportAst.declarations,
-	[
-		{
-			name: "ClassName",
-			alias: undefined,
-			kind: undefined
-		}
-	])
 })
 
 
