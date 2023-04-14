@@ -1,3 +1,4 @@
+import path from 'https://deno.land/std@0.177.0/node/path.ts'
 import { assert, assertEquals } from '../../../deps/std/assert.ts'
 
 import { parseImportExportStatementsFromString } from './ImportExport.ts'
@@ -554,11 +555,39 @@ Deno.test('Re-export default export as named export with alias', async () =>
 	const reexportAst = result.reexports[0]
 
 	assertEquals(reexportAst.type, "ReexportMetaAst")
-	assertEquals(reexportAst.moduleSpecifier, { specifier: "module-name", prefix: undefined, isPackageId: true })
+	assertEquals(reexportAst.moduleSpecifier,
+	{
+		specifier: "module-name",
+		prefix: undefined,
+		isPackageId: true
+	})
 	assertEquals(reexportAst.named,
 	[
 		{ name: "default", alias: "name1" }
 	])
 	assertEquals(reexportAst.namespace, undefined)
 	assertEquals(reexportAst.namespaceAlias, undefined)
+})
+
+
+
+Deno.test('Module specifier parsing with a relative path', async () =>
+{
+	const testRootPath = path.resolve("tests")
+	
+	const sourceCode = 'import { thing } from "./sample.ts"'
+	const result = await parseImportExportStatementsFromString(sourceCode, path.join(testRootPath, "import-export", "src.ts") )
+	const importsAst = result.imports[0]
+
+	assertEquals(importsAst.type, "ImportMetaAst")
+	assertEquals(importsAst.namespace, undefined)
+	assertEquals(importsAst.named,
+	[
+		{ name: "thing", alias: undefined }
+	])
+	
+	const moduleSpecifier = path.relative(testRootPath, importsAst.moduleSpecifier.specifier)
+	assertEquals(moduleSpecifier, "import-export/sample.ts")
+	assertEquals(importsAst.moduleSpecifier.prefix, undefined)
+	assertEquals(importsAst.moduleSpecifier.isPackageId, false)
 })
