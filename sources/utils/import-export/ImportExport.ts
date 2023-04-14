@@ -5,7 +5,6 @@ import { ts } from '../../../deps/typescript.ts'
 import type { TS } from '../../../deps/typescript.ts'
 
 import type { ImportExportGraphNode, ImportMetaAst, ExportDeclarationAst, ModuleSpecifier } from "./types.ts"
-import { StringLiteral } from '../../../../../../../Library/Caches/deno/npm/registry.npmjs.org/typescript/5.0.3/lib/typescript.d.ts'
 
 
 export async function parseImportExportStatements (source: TS.SourceFile, filepath: string): Promise<ImportExportGraphNode>
@@ -375,7 +374,7 @@ async function resolveModuleSpecifier (dirname: string, moduleSpecifier: string)
 	throw new Error(`Failed to resolve module specifier to a file with a supported extension:\n${moduleSpecifier}`)
 }
 
-async function parseModuleSpecifier (specifier: StringLiteral, directory: string): Promise<ModuleSpecifier>
+async function parseModuleSpecifier (specifier: TS.StringLiteral, directory: string): Promise<ModuleSpecifier>
 {
 	const moduleSpecifierText = specifier.text
 
