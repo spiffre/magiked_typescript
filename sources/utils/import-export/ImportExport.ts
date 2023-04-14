@@ -5,6 +5,7 @@ import { ts } from '../../../deps/typescript.ts'
 import type { TS } from '../../../deps/typescript.ts'
 
 import type { ImportExportGraphNode, ImportMetaAst, ExportDeclarationAst, ModuleSpecifier } from "./types.ts"
+import { StringLiteral } from '../../../../../../../Library/Caches/deno/npm/registry.npmjs.org/typescript/5.0.3/lib/typescript.d.ts'
 
 
 export async function parseImportExportStatements (source: TS.SourceFile, filepath: string): Promise<ImportExportGraphNode>
@@ -26,21 +27,7 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 		{
 			const importDeclaration = statement as TS.ImportDeclaration
 			
-			const moduleSpecifierText = (importDeclaration.moduleSpecifier as ts.StringLiteral).text
-
-			const prefixRegex = /^(copy:|webworker:)/
-			const prefixMatch = moduleSpecifierText.match(prefixRegex)
-			const prefix = prefixMatch ? prefixMatch[0] : undefined
-			const specifier = moduleSpecifierText.replace(prefixRegex, '')
-			const isPackageId = !specifier.startsWith('./') && !specifier.startsWith('../')
-			const resolvedSpecifier = isPackageId ? specifier : await resolveModuleSpecifier( dirname, specifier )
-
-			const moduleSpecifier: ModuleSpecifier =
-			{
-				specifier : resolvedSpecifier,
-				isPackageId,
-				prefix,
-			}
+			const moduleSpecifier = await parseModuleSpecifier(importDeclaration.moduleSpecifier as ts.StringLiteral, dirname)
 			
 			const loc =
 			{
@@ -89,21 +76,7 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 		// For re-exports aka Aggregation exports
 		else if (ts.isExportDeclaration(statement) && statement.moduleSpecifier)
 		{
-			const moduleSpecifierText = (statement.moduleSpecifier as ts.StringLiteral).text
-
-			const prefixRegex = /^(copy:|webworker:)/
-			const prefixMatch = moduleSpecifierText.match(prefixRegex)
-			const prefix = prefixMatch ? prefixMatch[0] : undefined
-			const specifier = moduleSpecifierText.replace(prefixRegex, '')
-			const isPackageId = !specifier.startsWith('./') && !specifier.startsWith('../')
-			const resolvedSpecifier = isPackageId ? specifier : await resolveModuleSpecifier( dirname, specifier )
-
-			const moduleSpecifier: ModuleSpecifier =
-			{
-				specifier : resolvedSpecifier,
-				isPackageId,
-				prefix,
-			}
+			const moduleSpecifier = await parseModuleSpecifier(statement.moduleSpecifier as ts.StringLiteral, dirname)
 			
 			const loc =
 			{
@@ -398,4 +371,22 @@ async function resolveModuleSpecifier (dirname: string, moduleSpecifier: string)
 	}
 	
 	throw new Error(`Failed to resolve module specifier to a file with a supported extension:\n${moduleSpecifier}`)
+}
+
+async function parseModuleSpecifier (specifier: StringLiteral, directory: string): Promise<ModuleSpecifier>
+{
+	const moduleSpecifierText = specifier.text
+
+	const prefixRegex = /^(copy:|webworker:)/
+	const prefixMatch = moduleSpecifierText.match(prefixRegex)
+	const prefix = prefixMatch ? prefixMatch[0] : undefined
+	const rawSpecifier = prefix ? moduleSpecifierText.replace(prefixRegex, '') : moduleSpecifierText
+	const isPackageId = !rawSpecifier.startsWith('./') && !rawSpecifier.startsWith('../')
+	const resolvedSpecifier = isPackageId ? rawSpecifier : await resolveModuleSpecifier(directory, rawSpecifier)
+
+	return {
+		specifier : resolvedSpecifier,
+		isPackageId,
+		prefix,
+	}
 }
