@@ -1,8 +1,8 @@
 import * as path from "https://deno.land/std@0.182.0/path/mod.ts"
 import { assert, assertEquals } from "https://deno.land/std@0.182.0/testing/asserts.ts"
 
-import { parseImportExportStatementsFromString } from './ImportExport.ts'
-import type { ExportListAst } from './types.ts'
+import { parseImportExportStatementsFromString } from '../sources/utils/import-export/ImportExport.ts'
+import type { ExportListAst } from '../sources/utils/import-export/types.ts'
 
 
 // IMPORT STATEMENTS

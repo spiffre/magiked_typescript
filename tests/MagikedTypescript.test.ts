@@ -4,8 +4,8 @@ import { assert } from "https://deno.land/std@0.182.0/testing/asserts.ts"
 import { Walker } from "../deps/any/magiked.ts"
 import { ts } from "../deps/any/typescript.ts"
 
-import type { TsPayload } from "./MagikedTypescript.ts"
-import { magikedTypescript } from "./MagikedTypescript.ts"
+import type { TsPayload } from "../sources/MagikedTypescript.ts"
+import { magikedTypescript } from "../sources/MagikedTypescript.ts"
 
 const DATA_BASE_PATH = "tests/walk/"
 
