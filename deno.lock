@@ -404,5 +404,16 @@
     "https://esm.sh/v115/typescript@5.0.4/lib/typescript.d.ts": "c7260cff8cc35e2cf475ec4847b44825f5bd7b886a92f43dc3f7f2c81d0d0f1f",
     "https://esm.sh/v94/acorn-jsx@5.3.2/es2022/acorn-jsx.js": "32795fba0a2580db654432f7adfc257b542f26926ddef05aff9041344c546b51",
     "https://esm.sh/v94/acorn@8.8.0/es2022/acorn.js": "65c8c03d55c023dea54401a468204db8b588a31ddbd04d9db07b4432330978f5"
+  },
+  "npm": {
+    "specifiers": {
+      "@types/node": "@types/node@18.11.18"
+    },
+    "packages": {
+      "@types/node@18.11.18": {
+        "integrity": "sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==",
+        "dependencies": {}
+      }
+    }
   }
 }
