@@ -1,8 +1,9 @@
-import * as path from '../../../deps/std/path.ts'
-import { assert } from '../../../deps/std/assert.ts'
+import { assert } from '../../../deps/deno/assert.ts'
+import { fs } from "../../../deps/deno/fs.ts";
+import { path } from '../../../deps/deno/path.ts'
 
-import { ts } from '../../../deps/typescript.ts'
-import type { TS } from '../../../deps/typescript.ts'
+import { ts } from '../../../deps/any/typescript.ts'
+import type { TS } from '../../../deps/any/typescript.ts'
 
 import type { ImportExportGraphNode, ImportMetaAst, ExportDeclarationAst, ModuleSpecifier } from "./types.ts"
 
@@ -330,7 +331,7 @@ async function resolveModuleSpecifier (dirname: string, moduleSpecifier: string)
 	try
 	{
 		const absolute = path.resolve(dirname, moduleSpecifier)
-		const stat = await Deno.stat(absolute)
+		const stat = await fs.stat(absolute)
 		if (stat.isFile)
 		{
 			return absolute
@@ -347,7 +348,7 @@ async function resolveModuleSpecifier (dirname: string, moduleSpecifier: string)
 		const filepath = path.resolve(dirname, `${moduleSpecifier}${ext}`)
 		try
 		{
-			await Deno.stat(filepath)
+			await fs.stat(filepath)
 			return filepath
 		}
 		catch (_error)
@@ -362,7 +363,7 @@ async function resolveModuleSpecifier (dirname: string, moduleSpecifier: string)
 		const filepath = path.resolve(dirname, moduleSpecifier, `index${ext}`)
 		try
 		{
-			await Deno.stat(filepath)
+			await fs.stat(filepath)
 			return filepath
 		}
 		catch (_error)

@@ -1,9 +1,9 @@
-import * as path from "../deps/std/path.ts"
+import { path } from "../deps/deno/path.ts"
 
-import type { Payload } from "../deps/magiked.ts"
+import type { Payload } from "../deps/any/magiked.ts"
 
-import { ts } from "../deps/typescript.ts"
-import type { TS } from "../deps/typescript.ts"
+import { ts } from "../deps/any/typescript.ts"
+import type { TS } from "../deps/any/typescript.ts"
 
 
 export interface TsPayload extends Payload

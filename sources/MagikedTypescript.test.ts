@@ -1,8 +1,8 @@
-import { assert } from "../deps/std/assert.ts";
-import * as path from "../deps/std/path.ts"
+import * as path from "https://deno.land/std@0.182.0/path/mod.ts"
+import { assert } from "https://deno.land/std@0.182.0/testing/asserts.ts"
 
-import { Walker } from "../deps/magiked.ts"
-import { ts } from "../deps/typescript.ts"
+import { Walker } from "../deps/any/magiked.ts"
+import { ts } from "../deps/any/typescript.ts"
 
 import type { TsPayload } from "./MagikedTypescript.ts"
 import { magikedTypescript } from "./MagikedTypescript.ts"
