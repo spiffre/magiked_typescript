@@ -68,9 +68,23 @@ const versionShort = version?.replace(/^v/, "")
 
 await build(
 {
-	entryPoints: ["./mod.ts"],
+	entryPoints: [ "./mod.ts" ],
 	outDir: TEMP_DIR,
-	shims: { deno : 'dev' },
+	
+	shims:
+	{
+		deno : 'dev'
+	},
+	
+	mappings:
+	{
+		"https://deno.land/x/magiked@0.7.0/mod.ts":
+		{
+			name: "@spiffre/magiked",
+			version: "^0.7.0",
+			peerDependency: false,
+		},
+	},
 	
 	package:
 	{
