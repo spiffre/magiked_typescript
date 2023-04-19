@@ -110,12 +110,7 @@ await build(
 			"script/mod.js",
 			"script/sources/",
 			"script/deps/",
-		],
-		
-		devDependencies :
-		{
-			"@types/micromatch" : "^4.0.0"
-		}
+		]
 	},
 	
 	postBuild ()
