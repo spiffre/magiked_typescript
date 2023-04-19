@@ -42,7 +42,10 @@ export function magikedTypescript (code: string, options: Partial<MagikedTypescr
 	}
 	catch (error)
 	{
-		throw new Error(`Failed to parse file: ${filepath}`, { cause : error })
+		throw new Error(`Failed to parse file: ${filepath}\n\nCaused by:${error}`)
+		
+		// This won't work despite compilerOptions's target and lib set to ES2022
+		//throw new Error(`Failed to parse file: ${filepath}`, { cause : error })
 	}
 	
 	if (opts.filepath)
