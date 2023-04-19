@@ -18,6 +18,17 @@
 			"attachSimplePort": 9231,
 			"outputCapture": "std",
 			"args": []
+		},
+		
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Debug Node Tests",
+			"runtimeArgs": [
+				"--inspect-brk",
+				"${workspaceFolder}/npm/temp/test_runner.js",
+			],
+			"skipFiles": [ "<node_internals>/**" ]
 		}
 	]
 }
