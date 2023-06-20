@@ -347,6 +347,22 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 					loc
 				}
 			}
+			// If it's a namespace/module
+			else if (statement.kind == ts.SyntaxKind.ModuleDeclaration)
+			{
+				const decl = statement as ts.ModuleDeclaration
+				const name = typeof decl.name == "string"
+								? decl.name
+								: (decl.name as TS.Identifier).escapedText.toString()
+
+				exportAst =
+				{
+					type : 'ModuleDeclarationAst',
+					name,
+					isDefault,
+					loc
+				}
+			}
 			
 			assert(exportAst)
 			iegn.exports.push(exportAst)

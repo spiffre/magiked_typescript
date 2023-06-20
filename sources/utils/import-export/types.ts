@@ -92,6 +92,14 @@ interface EnumDeclarationAst extends MetaAst
 	name: string
 }
 
+interface ModuleDeclarationAst extends MetaAst
+{
+	type: 'ModuleDeclarationAst'
+	isDefault: boolean
+	
+	name: string
+}
+
 
 
 export type ExportDeclarationAst =
@@ -101,6 +109,7 @@ export type ExportDeclarationAst =
   | InterfaceDeclarationAst
   | TypeDeclarationAst
   | EnumDeclarationAst
+  | ModuleDeclarationAst
 
 // EXPORT LIST
 
