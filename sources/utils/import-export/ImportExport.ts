@@ -39,13 +39,16 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 			{
 				type : 'ImportMetaAst',
 				moduleSpecifier,
-				loc
+				loc,
+				isType : false
 			}
 			
 			if (importDeclaration.importClause)
 			{
-				const { name, namedBindings } = importDeclaration.importClause
+				const { name, namedBindings, isTypeOnly } = importDeclaration.importClause
 		
+				importAstNode.isType = isTypeOnly
+				
 				if (name)
 				{
 					importAstNode.default = name.text
@@ -64,6 +67,7 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 							return {
 								name : element.propertyName?.text || element.name.text,
 								alias : element.propertyName ? element.name.text : undefined,
+								isType : element.isTypeOnly
 							}
 						})
 					}
