@@ -65,7 +65,42 @@ interface ClassDeclarationAst extends MetaAst
 	name?: string
 }
 
-export type ExportDeclarationAst = VariableDeclarationAst | FunctionDeclarationAst | ClassDeclarationAst
+
+
+
+interface InterfaceDeclarationAst extends MetaAst
+{
+	type: 'InterfaceDeclarationAst'
+	isDefault: boolean
+	
+	name: string
+}
+
+interface TypeDeclarationAst extends MetaAst
+{
+	type: 'TypeDeclarationAst'
+	isDefault: boolean
+	
+	name: string
+}
+
+interface EnumDeclarationAst extends MetaAst
+{
+	type: 'EnumDeclarationAst'
+	isDefault: boolean
+	
+	name: string
+}
+
+
+
+export type ExportDeclarationAst =
+  | VariableDeclarationAst
+  | FunctionDeclarationAst
+  | ClassDeclarationAst
+  | InterfaceDeclarationAst
+  | TypeDeclarationAst
+  | EnumDeclarationAst
 
 // EXPORT LIST
 

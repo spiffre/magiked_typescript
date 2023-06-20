@@ -303,6 +303,50 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 					loc
 				}
 			}
+			// If it's an interface
+			else if (statement.kind == ts.SyntaxKind.InterfaceDeclaration)
+			{
+				const decl = statement as ts.InterfaceDeclaration
+				const name = decl.name.escapedText.toString()
+
+				exportAst =
+				{
+					type : 'InterfaceDeclarationAst',
+					name,
+					isDefault,  // fixme: does it make sense ?
+					loc
+				}
+			}
+			// If it's a type
+			else if (statement.kind == ts.SyntaxKind.TypeAliasDeclaration)
+			{
+				const decl = statement as ts.TypeAliasDeclaration
+				const name = decl.name.escapedText.toString()
+				
+				exportAst =
+				{
+					type : 'TypeDeclarationAst',
+					name,
+					isDefault,
+					loc
+				}
+			}
+			// If it's an enum
+			else if (statement.kind == ts.SyntaxKind.EnumDeclaration)
+			{
+				const decl = statement as ts.EnumDeclaration
+				const name = decl.name.escapedText.toString()
+
+				exportAst =
+				{
+					type : 'EnumDeclarationAst',
+					kind : 'function',
+					flavor : 'function',
+					name : name,
+					isDefault,
+					loc
+				}
+			}
 			
 			assert(exportAst)
 			iegn.exports.push(exportAst)
