@@ -137,3 +137,21 @@ Deno.test('Export enum', async () =>
 	assertEquals(exportAst.name, "Whatever")
 	assertEquals(exportAst.isDefault, false)
 })
+
+
+// TYPESCRIPT DEFAULT EXPORT STATEMENTS
+
+// export default interface Whatever {}"
+// Note that enums and types cannot be default-exported (apparently)
+
+Deno.test('Export interface', async () =>
+{
+	const sourceCode = 'export default interface Whatever {}'
+	const result = await parseImportExportStatementsFromString(sourceCode, 'whatever')
+	
+	const exportAst = result.exports[0]
+
+	assert(exportAst.type == "InterfaceDeclarationAst")
+	assertEquals(exportAst.name, "Whatever")
+	assertEquals(exportAst.isDefault, true)
+})
