@@ -340,9 +340,7 @@ export async function parseImportExportStatements (source: TS.SourceFile, filepa
 				exportAst =
 				{
 					type : 'EnumDeclarationAst',
-					kind : 'function',
-					flavor : 'function',
-					name : name,
+					name,
 					isDefault,
 					loc
 				}
